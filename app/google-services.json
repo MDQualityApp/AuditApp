@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "641874573388",
+    "project_id": "auditinspection-64d45",
+    "storage_bucket": "auditinspection-64d45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641874573388:android:5a496e4876283f81bc5ce9",
+        "android_client_info": {
+          "package_name": "com.mdq.auditinspectionapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "641874573388-ps9v51a69mcujq1dnadefl7viqpt9mej.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mdq.auditinspectionapp",
+            "certificate_hash": "c68ae395888da86d81147313f353fcae36c60222"
+          }
+        },
+        {
+          "client_id": "641874573388-7adaan7gsvbomcuia0kd3s5km8b2m5sh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3F4aeuXoF4F_QXvBv_B2hZ6BrCstwydY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "641874573388-7adaan7gsvbomcuia0kd3s5km8b2m5sh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

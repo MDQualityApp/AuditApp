@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".Activity.FinalReportScreen">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:weightSum="1"
+                    android:id="@+id/linearBack"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/Backarraow"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.1"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_baseline_chevron_left_24" />
+
+                    <TextView
+                        android:id="@+id/Back"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.9"
+                        android:layout_marginLeft="10dp"
+                        android:text="Back"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/linearBack"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    android:id="@+id/linearWelcome"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginLeft="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_weight="0.2"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_settings" />
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:gravity="end"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:id="@+id/view"
+                    app:layout_constraintTop_toBottomOf="@+id/linearWelcome"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/gradientforview" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/fetching"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/progress"
+            android:layout_marginTop="20dp"
+            android:text="Fetching data..."
+            android:textColor="@color/black"
+            android:gravity="center"
+            />
+
+                <TextView
+                    android:id="@+id/textView22"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="No Data Found"
+                    android:visibility="invisible"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Download"
+            android:id="@+id/SAVE"
+            android:textSize="12sp"
+            android:padding="10dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="2dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/textView22"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/ic_baseline_file_download_24"
+            android:background="@drawable/rippleforlogin"
+            />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
