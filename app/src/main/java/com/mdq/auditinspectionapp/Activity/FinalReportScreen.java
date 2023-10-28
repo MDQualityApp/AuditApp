@@ -14,7 +14,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,8 +39,28 @@ import com.mdq.auditinspectionapp.databinding.ActivityFinalReportScreenBinding;
 import com.mdq.auditinspectionapp.enums.MessageViewType;
 import com.mdq.auditinspectionapp.enums.ViewType;
 
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class FinalReportScreen extends AppCompatActivity implements GetInspectionReportResponseInterface, GetProductionResponseInterface {
 
@@ -111,9 +133,11 @@ public class FinalReportScreen extends AppCompatActivity implements GetInspectio
                 if (permission == PackageManager.PERMISSION_GRANTED) {
                     if (download) {
                         if (who.equals("inspection")) {
-                            download(getInspectionReportResponseModel.getLink(), filename);
+//                            download(getInspectionReportResponseModel.getLink(), filename);
+                            new DownloadFileFromURL().execute(getInspectionReportResponseModel.getLink(),filename);
                         } else if (who.equals("production")) {
-                            download(getProductionReportResponseModel.getLink(), filename);
+//                            download(getProductionReportResponseModel.getLink(), filename);
+                            new DownloadFileFromURL().execute(getProductionReportResponseModel.getLink(),filename);
                         }
                     }
                 } else {
@@ -164,7 +188,7 @@ public class FinalReportScreen extends AppCompatActivity implements GetInspectio
         try {
             if (getInspectionReportResponseModel != null && !getInspectionReportResponseModel.getLink().isEmpty()) {
                 download = true;
-                String str = getInspectionReportResponseModel.getLink().replace("http://demo.azonix.in:10557/audit/inspection/upload/", "");
+                String str = getProductionReportResponseModel.getLink().replace("https://219.90.67.5:4545/audit/production/upload/production-", "");
                 filename = str;
                 this.getInspectionReportResponseModel = getInspectionReportResponseModel;
                 activityFinalReportScreenBinding.textView22.setText("Data found");
@@ -197,7 +221,7 @@ public class FinalReportScreen extends AppCompatActivity implements GetInspectio
             if (getProductionReportResponseModel != null && !getProductionReportResponseModel.getLink().isEmpty()) {
                 this.getProductionReportResponseModel = getProductionReportResponseModel;
                 download = true;
-                String str = getProductionReportResponseModel.getLink().replace("http://demo.azonix.in:10557/audit/production/upload/", "");
+                String str = getProductionReportResponseModel.getLink().replace("https://219.90.67.5:4545/audit/production/upload/production-", "");
                 filename = str;
                 activityFinalReportScreenBinding.textView22.setText("Data found");
                 activityFinalReportScreenBinding.textView22.setVisibility(View.VISIBLE);
@@ -232,9 +256,11 @@ public class FinalReportScreen extends AppCompatActivity implements GetInspectio
         LocalDateTime now = LocalDateTime.now();
         String date = dtf.format(now);
         String url = link.trim();
+//        String url = "https://mdqualityapps.in/vsafe/UAT/admin/current_version/Version1.2_Android.bin";
+
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setDescription(filename + "/ " + date);
-
+        
         String nnme = filename + "_" + date + ".pdf";
         Log.i("sanjai", filename + "/" + date);
         request.setTitle(filename + "/" + date);
@@ -266,7 +292,6 @@ public class FinalReportScreen extends AppCompatActivity implements GetInspectio
                 if (cursor.moveToFirst()) {
                     int status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
                     if (status == DownloadManager.STATUS_SUCCESSFUL) {
-
                         // download is successful
                         Dialog dialog = new Dialog(FinalReportScreen.this, R.style.dialog_center);
                         dialog.setContentView(R.layout.sucees_pop_up);
@@ -279,7 +304,6 @@ public class FinalReportScreen extends AppCompatActivity implements GetInspectio
                             }
                         }, 2000);
                     } else {
-                        // download is cancelled
                     }
                 } else {
                     // download is cancelled
@@ -289,4 +313,109 @@ public class FinalReportScreen extends AppCompatActivity implements GetInspectio
         registerReceiver(downloadReceiver, filter);
 
     }
+
+
+    class DownloadFileFromURL extends AsyncTask<String, String, String>
+    {
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values)
+        {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected String doInBackground(String... f_url) {
+            int count;
+            try
+            {
+                TrustManager[] trustAllCertificates = new TrustManager[]{
+                        new X509TrustManager()
+                        {
+                            public java.security.cert.X509Certificate[] getAcceptedIssuers()
+                            {
+                                return null;
+                            }
+
+                            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
+                            {
+                            }
+
+                            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
+                            {
+                            }
+                        }
+                };
+
+                // Create an SSLContext with the trustAllCertificates
+                SSLContext sslContext = SSLContext.getInstance("TLS");
+                sslContext.init(null, trustAllCertificates, new SecureRandom());
+                URL url = new URL(f_url[0]);
+                // Set the custom SSLContext for the connection
+                HttpsURLConnection conection = null;
+                (conection).setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+                    conection = (HttpsURLConnection) url.openConnection();
+                conection.setHostnameVerifier(new AllowAllHostnameVerifier());
+                conection.connect();
+
+                int lengthOfFile = conection.getContentLength();
+
+                // Download the file
+                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+
+                // Define the directory path in the "Download" directory
+                File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                if (!downloadDir.exists())
+                {
+                    downloadDir.mkdirs(); // Create the directory if it doesn't exist
+                }
+
+                File outputFile = new File(downloadDir, f_url[1]);
+
+                try (FileOutputStream output = new FileOutputStream(outputFile))
+                {
+                    byte data[] = new byte[1024];
+                    long total = 0;
+
+                    while ((count = input.read(data)) != -1)
+                    {
+                        total += count;
+                        // Publishing the progress (you can modify this part as needed)
+                        // After this onProgressUpdate will be called
+//                    publishProgress("" + (int) ((total * 100) / lengthOfFile);
+                        // Writing data to file
+                        output.write(data, 0, count);
+                    }
+
+                    output.flush();
+                    // Closing streams
+                    output.close();
+                    input.close();
+
+                    // Notify the MediaScanner about the new file so it appears in the device's media library
+                    MediaScannerConnection.scanFile(FinalReportScreen.this, new String[]{outputFile.getAbsolutePath()}, null, null);
+
+
+                    Log.i("Done", "Done");
+                } catch (FileNotFoundException e)
+                {
+                    e.printStackTrace();
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+
 }
+
